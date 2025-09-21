@@ -1,3 +1,5 @@
+import { HttpError } from "@/exceptions/http"
+
 export class API {
     private readonly baseUrl: string = process.env.NEXT_BACKEND_URL || "http://localhost:4000"
 
@@ -5,8 +7,8 @@ export class API {
         try {
             const res = await fetch(`${this.baseUrl}${path}`, opts)
             if (!res.ok) {
-                const errorText = await res.text()
-                throw new Error(`HTTP: ${res.status}: ${errorText}`)
+                const error =  new HttpError("Error fetching data", await res.json(), res.status)
+                throw error
             }
             return res.json() as Promise<T>
         } catch (err) {
@@ -20,5 +22,9 @@ export class API {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         })
+    }
+
+    async get<T>(path: string) {
+        return this.request<T>(path, {})
     }
 }

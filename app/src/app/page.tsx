@@ -1,19 +1,38 @@
 "use client"
+import { TaskApi } from "@/api/task";
 import { AddTaskModal } from "@/components/tasks/modal/add-task";
+import { TaskDetailModal } from "@/components/tasks/modal/task-detail";
+import { TasksList } from "@/components/tasks/task-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Task } from "@/types/task";
 import { Plus, Search } from "lucide-react"
 import { useState } from "react";
+import useSWR from "swr";
 
 export default function Home() {
-
+  const { data: tasks, error, isLoading } = useSWR("/tasks", TaskApi.findAll, { fallbackData: [] })
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const tasks: Task[] = []
-  const completedCount = 5
-  const totalCount = 10
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  if (error) {
+    return <p>{error.info}</p>
+  }
+  if (isLoading) {
+    return <p>Loading....</p>
+  }
+  const updateTask = async () => {
+    try {
 
+    }catch(err) {
+
+    }
+  }
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task)
+  }
+  const completedCount = tasks.filter((task) => task.isCompleted).length
+  const totalCount = tasks.length
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -70,13 +89,14 @@ export default function Home() {
                 </div>
               </CardHeader>
               <CardContent>
-                {/* task list content here */}
+                <TasksList tasks={tasks} onTaskClick={handleTaskClick} />
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
       <AddTaskModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
+      <TaskDetailModal task={selectedTask} isOpen={!!selectedTask} onClose={() => setSelectedTask(null)}/>
     </div>
   );
 }

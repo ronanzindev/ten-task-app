@@ -10,6 +10,7 @@ import { DialogTitle } from "@radix-ui/react-dialog"
 import { Plus } from "lucide-react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
+import { mutate } from "swr"
 
 interface AddTaskModalProps {
     isOpen: boolean
@@ -20,6 +21,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
     const onSubimit = async (task: CreateTask) => {
         try {
             await TaskApi.create(task)
+            mutate("/tasks")
             toast.success("Task created successfully")
             onClose()
         } catch (err) {

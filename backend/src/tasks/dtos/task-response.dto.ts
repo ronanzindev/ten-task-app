@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { randomUUID } from "crypto"
+import { Task } from "../entities/task.entity"
 
 export class TaskResponseDto {
     @ApiProperty({ description: "Task id", example: randomUUID() })
@@ -26,11 +27,14 @@ export class TaskResponseDto {
     @ApiProperty({ description: "Is task completed?", example: true })
     isCompleted: boolean
 
-    constructor(id: string,title: string, isCompleted: boolean, description?: string, dueDate?: Date){
+    @ApiProperty({ description: "When task was created" })
+    createdAt: Date
+    constructor({id, title, description, isCompleted, dueDate, createdAt }: Task) {
         this.id = id
         this.title = title
         this.description = description
         this.dueDate = dueDate
         this.isCompleted = isCompleted
+        this.createdAt = createdAt
     }
 }
