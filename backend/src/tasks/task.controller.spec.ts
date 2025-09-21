@@ -1,3 +1,4 @@
+import { NotFoundException } from "@nestjs/common"
 import { CreateTaskDto } from "./dtos/create-task.dto"
 import { Task } from "./entities/task.entity"
 import { TaskController } from "./task.controller"
@@ -47,5 +48,26 @@ describe("TaskController", () => {
             expect(result[0].title).toContain('Buy');
             expect(result[1].title).toContain('Buy');
         });
+    })
+    describe("markAsCompleted", () => {
+        it("should mark task as completed", () => {
+            const task = new Task("Task Title", "Task Description")
+            const id = task.id
+
+            jest.spyOn(taskService, 'markAsCompleted').mockReturnValue({
+                ...task,
+                isCompleted: true,
+            } as Task)
+            const result = taskController.markAsCompleted(id)
+            expect(result?.isCompleted).toBe(true)
+            expect(taskService.markAsCompleted).toHaveBeenCalledWith(id)
+
+        })
+        it("should throw NotFoundException if task not found", () => {
+            jest.spyOn(taskService, 'markAsCompleted').mockImplementation(() => {
+                throw new NotFoundException('Task not found')
+            })
+            expect(() => taskController.markAsCompleted('wrong id')).toThrow(NotFoundException)
+        })
     })
 })
