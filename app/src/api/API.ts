@@ -10,6 +10,9 @@ export class API {
                 const error =  new HttpError("Error fetching data", await res.json(), res.status)
                 throw error
             }
+            if(res.status === 204) {
+                return undefined as unknown as T
+            }
             return res.json() as Promise<T>
         } catch (err) {
             console.error("API Error:", err);

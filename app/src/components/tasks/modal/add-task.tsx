@@ -17,7 +17,7 @@ interface AddTaskModalProps {
     onClose: () => void
 }
 export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
-    const { handleSubmit, register, watch, control } = useForm<CreateTask>({ defaultValues: { title: "", dueDate: undefined } })
+    const { handleSubmit, register, watch, control, formState: { errors } } = useForm<CreateTask>({ defaultValues: { title: "", dueDate: undefined } })
     const onSubmit = async (task: CreateTask) => {
         try {
             await TaskApi.create(task)
@@ -30,7 +30,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
         }
     }
     return (
-        <Dialog open={isOpen} onOpenChange={() => onClose()}>
+        <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Add New Task</DialogTitle>
@@ -38,20 +38,21 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="task-title">Title</Label>
+                        <Label htmlFor="taskTitle">Title</Label>
                         <Input
-                            id="task-title"
+                            id="taskTitle"
                             type="text"
                             placeholder="Enter task title"
                             className="bg-input border-border text-foreground placeholder:text-muted-foreground"
                             {...register('title', { required: true })}
                         />
+                        {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="task-description">Description (optional)</Label>
+                        <Label htmlFor="taskDescription">Description (optional)</Label>
                         <Textarea
-                            id="task-description"
+                            id="taskDescription"
                             placeholder="Enter task description"
                             className="bg-input border-border text-foreground placeholder:text-muted-foreground resize-none"
                             rows={3}
@@ -60,6 +61,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                     </div>
 
                     <div className="space-y-2">
+                        <Label htmlFor="taskDueDate">Due Date</Label>
                         <Controller
                             control={control}
                             name="dueDate"
@@ -67,7 +69,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                             render={({ field }) => (
                                 <Input
                                     defaultValue=""
-                                    id="task-dueDate"
+                                    id="taskDueDate"
                                     type="date"
                                     className="bg-input border-border text-foreground"
                                     {...field}
@@ -77,8 +79,6 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                                 />
                             )}
                         />
-                        <Label htmlFor="task-dueDate">Due Date</Label>
-
                     </div>
 
                     <div className="flex gap-3 pt-4">

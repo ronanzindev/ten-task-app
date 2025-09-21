@@ -16,7 +16,6 @@ type TasksCardProps = {
 
 export function TasksCard({ tasks, onTaskClick, onDeleteTask, onToggleTask }: TasksCardProps) {
     const [query, setQuery] = useState("");
-    console.log(tasks.length)
     const filteredTasks = useMemo(() => {
         return tasks.filter((t) =>
             t.title.toLowerCase().includes(query.toLowerCase())
