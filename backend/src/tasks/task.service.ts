@@ -13,9 +13,14 @@ export class TaskService implements ITaskService {
             this.tasks.push(task)
             this.logger.log(`New task created: ${task.id}->${task.title}`)
             return new TaskResponseDto(task.id, task.title, task.isCompleted, task.description, task.dueDate)
-        } catch(error) {
+        } catch (error) {
             throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
         }
-
+    }
+    findAll(): TaskResponseDto[] {
+        return this.tasks.map((task) => new TaskResponseDto(task.id, task.title, task.isCompleted, task.description, task.dueDate))
+    }
+    findAllByTitle(title: string): TaskResponseDto[] {
+        return this.tasks.filter(task => task.title.toLowerCase().search(title.toLowerCase())).map((task) => new TaskResponseDto(task.id, task.title, task.isCompleted, task.description, task.dueDate))
     }
 }
