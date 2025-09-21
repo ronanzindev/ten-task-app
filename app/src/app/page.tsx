@@ -1,33 +1,33 @@
 "use client"
 import { TaskApi } from "@/api/task";
+import { ProgressCard } from "@/components/ProgressCard";
 import { AddTaskModal } from "@/components/tasks/modal/add-task";
 import { TaskDetailModal } from "@/components/tasks/modal/task-detail";
-import { TasksList } from "@/components/tasks/task-list";
+import { TaskList } from "@/components/tasks/task-list";
+import { TasksCard } from "@/components/TasksCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useTasks } from "@/hooks/useTasks";
 import { Task } from "@/types/task";
 import { Plus, Search } from "lucide-react"
 import { useState } from "react";
-import useSWR from "swr";
+import { toast } from "sonner";
+import useSWR, { mutate } from "swr";
 
 export default function Home() {
-  const { data: tasks, error, isLoading } = useSWR("/tasks", TaskApi.findAll, { fallbackData: [] })
+  const { tasks, error, isLoading, markCompleted, remove } = useTasks()
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   if (error) {
-    return <p>{error.info}</p>
+    toast.error("Failed to load tasks");
+    return <p>Something went wrong...</p>;
   }
+
   if (isLoading) {
-    return <p>Loading....</p>
+    return <p>Loading...</p>;
   }
-  const updateTask = async () => {
-    try {
 
-    }catch(err) {
-
-    }
-  }
   const handleTaskClick = (task: Task) => {
     setSelectedTask(task)
   }
@@ -51,52 +51,12 @@ export default function Home() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-1">
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-card-foreground">Progress</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Completed</span>
-                    <span className="text-foreground font-medium"> {completedCount} of {totalCount}</span>
-                  </div>
-                  <div className="w-full bg-secondary rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full transition-all duration-300"
-                      style={{ width: totalCount > 0 ? `${(completedCount / totalCount) * 100}%` : "0%" }} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="md:col-span-2">
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-card-foreground">
-                  Your tasks
-                </CardTitle>
-                <CardDescription>
-                  {totalCount === 0 ? "No tasks yet. Add your first task to get started!" : `${totalCount} total tasks`}
-                </CardDescription>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    placeholder="Search tasks by title..."
-                    className="pl-10 bg-background border-border"
-                  />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <TasksList tasks={tasks} onTaskClick={handleTaskClick} />
-              </CardContent>
-            </Card>
-          </div>
+          <ProgressCard completed={completedCount} total={tasks.length} />
+          <TasksCard onDeleteTask={remove} onTaskClick={setSelectedTask} onToggleTask={markCompleted} tasks={tasks} />
         </div>
       </div>
       <AddTaskModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
-      <TaskDetailModal task={selectedTask} isOpen={!!selectedTask} onClose={() => setSelectedTask(null)}/>
+      <TaskDetailModal task={selectedTask} isOpen={!!selectedTask} onClose={() => setSelectedTask(null)} />
     </div>
   );
 }

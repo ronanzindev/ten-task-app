@@ -1,63 +1,96 @@
+"use client"
+
+import { TaskItem } from "@/components/tasks/task-item"
 import { Task } from "@/types/task"
-import { TaskItem } from "./task-item"
 
 interface TaskListProps {
-    tasks: Task[]
-    onTaskClick: (task: Task) => void
-    onToggleTask: (id: string) => void
-    onDeleteTask: (id: string) => void
+  tasks: Task[]
+  onToggleTask: (id: string) => void
+  onDeleteTask: (id: string) => void
+  onTaskClick: (task: Task) => void
 }
-export function TasksList({ tasks, onTaskClick, onToggleTask, onDeleteTask }: TaskListProps) {
-    if (tasks.length === 0) {
-        return (
-            <div className="text-center py-12">
-                <div className="text-muted-foreground text-lg mb-2">No task yet</div>
-                <div className="text-muted-foreground text-sm">Add your first task to get started with your productive journey</div>
-            </div>
-        )
-    }
 
-    const pendingTasks = tasks.filter((tasks) => !tasks.isCompleted)
-    const completedTasks = tasks.filter((tasks) => tasks.isCompleted)
+function TaskSection({
+  title,
+  tasks,
+  onToggleTask,
+  onDeleteTask,
+  onTaskClick,
+}: {
+  title: string
+  tasks: Task[]
+  onToggleTask: (id: string) => void
+  onDeleteTask: (id: string) => void
+  onTaskClick: (task: Task) => void
+}) {
+  if (tasks.length === 0) return null
+
+  return (
+    <section>
+      <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wide">
+        {title} ({tasks.length})
+      </h3>
+      <div className="space-y-2">
+        {tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onToggle={onToggleTask}
+            onDelete={onDeleteTask}
+            onTaskClick={onTaskClick}
+          />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export function TaskList({
+  tasks,
+  onToggleTask,
+  onDeleteTask,
+  onTaskClick,
+}: TaskListProps) {
+  if (tasks.length === 0) {
     return (
-        <div>
-            {pendingTasks.length > 0 && (
-                <div className="space-y-6">
-                    <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wide">
-                        Pending ({pendingTasks.length})
-                    </h3>
-                    <div className="space-y-2">
-                        {pendingTasks.map((task) => (
-                            <TaskItem
-                                key={task.id}
-                                task={task}
-                                onTaskClick={onTaskClick}
-                                onToggle={onToggleTask}
-                                onDelete={onDeleteTask}
-                            />
-                        ))}
-
-                        {completedTasks.length > 0 && (
-                            <div>
-                                <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wide">
-                                    Completed ({completedTasks.length})
-                                </h3>
-                                <div className="space-y-2">
-                                    {completedTasks.map((task) => (
-                                        <TaskItem
-                                            key={task.id}
-                                            task={task}
-                                            onToggle={onToggleTask}
-                                            onDelete={onDeleteTask}
-                                            onTaskClick={onTaskClick}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+      <div className="text-center py-12">
+        <div className="text-muted-foreground text-lg mb-2">
+          No tasks yet
         </div>
+        <div className="text-muted-foreground text-sm mb-4">
+          Add your first task to get started with your productivity journey
+        </div>
+        <button className="px-4 py-2 text-sm rounded-md bg-primary text-white shadow">
+          Add Task
+        </button>
+      </div>
     )
+  }
+
+  const pendingTasks = tasks.filter((t) => !t.isCompleted)
+  const completedTasks = tasks.filter((t) => t.isCompleted)
+
+  return (
+    <div className="space-y-8">
+      <TaskSection
+        title="Pending"
+        tasks={pendingTasks}
+        onToggleTask={onToggleTask}
+        onDeleteTask={onDeleteTask}
+        onTaskClick={onTaskClick}
+      />
+
+      {pendingTasks.length > 0 && completedTasks.length > 0 && (
+        <div className="border-t border-muted/30" />
+      )}
+
+      <TaskSection
+        title="Completed"
+        tasks={completedTasks}
+        onToggleTask={onToggleTask}
+        onDeleteTask={onDeleteTask}
+        onTaskClick={onTaskClick}
+      />
+    </div>
+  )
 }

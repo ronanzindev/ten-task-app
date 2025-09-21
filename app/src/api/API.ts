@@ -27,4 +27,11 @@ export class API {
     async get<T>(path: string) {
         return this.request<T>(path, {})
     }
+
+    async patch<T>(path: string) {
+        return this.request<T>(path, {method: "PATCH"})
+    }
+    async delete(path: string) {
+        return this.request<{}>(path, {method: "DELETE"})
+    }
 }
