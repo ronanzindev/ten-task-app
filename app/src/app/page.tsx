@@ -1,3 +1,5 @@
+"use client"
+import { AddTaskModal } from "@/components/tasks/modal/add-task";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,6 +10,7 @@ export default function Home() {
   const tasks: Task[] = []
   const completedCount = 5
   const totalCount = 10
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -69,6 +72,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <AddTaskModal isOpen={true} onAddTask={() => {}} onClose={() => {}} />
     </div>
   );
 }
