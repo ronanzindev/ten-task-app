@@ -5,8 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Task } from "@/types/task";
 import { Plus, Search } from "lucide-react"
+import { useState } from "react";
 
 export default function Home() {
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const tasks: Task[] = []
   const completedCount = 5
   const totalCount = 10
@@ -20,6 +23,7 @@ export default function Home() {
             <p className="text-muted-foreground text-lg">Stay organized and productive with your personal task list</p>
           </div>
           <Button
+            onClick={() => setIsAddModalOpen(true)}
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -72,7 +76,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <AddTaskModal isOpen={true} onAddTask={() => {}} onClose={() => {}} />
+      <AddTaskModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
     </div>
   );
 }

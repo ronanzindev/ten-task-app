@@ -3,7 +3,7 @@ export class API {
 
     private async request<T>(path: string, opts: RequestInit): Promise<T> {
         try {
-            const res = await fetch(`${this.baseUrl}/${path}`, opts)
+            const res = await fetch(`${this.baseUrl}${path}`, opts)
             if (!res.ok) {
                 const errorText = await res.text()
                 throw new Error(`HTTP: ${res.status}: ${errorText}`)

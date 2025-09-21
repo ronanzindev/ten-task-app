@@ -26,7 +26,8 @@ export class TaskResponseDto {
     @ApiProperty({ description: "Is task completed?", example: true })
     isCompleted: boolean
 
-    constructor(title: string, isCompleted: boolean, description?: string, dueDate?: Date){
+    constructor(id: string,title: string, isCompleted: boolean, description?: string, dueDate?: Date){
+        this.id = id
         this.title = title
         this.description = description
         this.dueDate = dueDate
