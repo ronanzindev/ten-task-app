@@ -2,7 +2,7 @@ import { ITaskService } from "./interfaces/task.interface";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { TaskResponseDto } from "./dtos/task-response.dto";
 import { Task } from "./entities/task.entity";
-import { HttpException, HttpStatus, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Logger, NotFoundException } from "@nestjs/common";
 
 export class TaskService implements ITaskService {
     private tasks: Task[] = []
@@ -22,5 +22,15 @@ export class TaskService implements ITaskService {
     }
     findAllByTitle(title: string): TaskResponseDto[] {
         return this.tasks.filter(task => task.title.toLowerCase().search(title.toLowerCase())).map((task) => new TaskResponseDto(task))
+    }
+    findById(id: string): Task | undefined {
+        return this.tasks.find(task => task.id === id)
+    }
+    markAsCompleted(id: string): TaskResponseDto | undefined {
+        const task = this.findById(id)
+        if (!task) throw new NotFoundException(`Task with id: '${id}' not found`)
+        task.markAsCompleted()
+        this.logger.log(`Task ${id} mark as completed`)
+        return new TaskResponseDto(task)
     }
 }
