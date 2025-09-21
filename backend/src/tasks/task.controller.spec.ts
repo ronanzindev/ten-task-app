@@ -70,4 +70,22 @@ describe("TaskController", () => {
             expect(() => taskController.markAsCompleted('wrong id')).toThrow(NotFoundException)
         })
     })
+
+    describe("deleteTask", () => {
+        it("should call service.delete on delete", () => {
+            const spy = jest.spyOn(taskService, "delete").mockImplementation(() => undefined)
+
+            taskController.delete("123")
+
+            expect(spy).toHaveBeenCalledWith("123")
+        })
+
+        it("should throw if service.delete throws", () => {
+            jest.spyOn(taskService, "delete").mockImplementation(() => {
+                throw new NotFoundException()
+            })
+
+            expect(() => taskController.delete("not-found")).toThrow(NotFoundException)
+        })
+    })
 })

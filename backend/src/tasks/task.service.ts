@@ -33,4 +33,14 @@ export class TaskService implements ITaskService {
         this.logger.log(`Task ${id} mark as completed`)
         return new TaskResponseDto(task)
     }
+    delete(id: string): void {
+        const taskIndex = this.tasks.findIndex(task => task.id === id)
+        if (taskIndex === -1) {
+            throw new NotFoundException(`Task with id: '${id}' not found`)
+        }
+
+        const [removedTask] = this.tasks.splice(taskIndex, 1)
+        this.logger.log(`Task deleted: ${removedTask.id} -> ${removedTask.title}`)
+
+    }
 }

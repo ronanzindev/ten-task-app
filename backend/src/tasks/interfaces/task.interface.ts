@@ -8,4 +8,5 @@ export interface ITaskService {
     findAllByTitle(title: string): TaskResponseDto[]
     findById(id: string): Task | undefined
     markAsCompleted(id: string): TaskResponseDto | undefined
+    delete(id: string): void
 }
