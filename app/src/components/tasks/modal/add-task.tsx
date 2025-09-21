@@ -18,7 +18,7 @@ interface AddTaskModalProps {
 }
 export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
     const { handleSubmit, register, watch, control } = useForm<CreateTask>({ defaultValues: { title: "", dueDate: undefined } })
-    const onSubimit = async (task: CreateTask) => {
+    const onSubmit = async (task: CreateTask) => {
         try {
             await TaskApi.create(task)
             mutate("/tasks")
@@ -36,7 +36,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                     <DialogTitle>Add New Task</DialogTitle>
                     <DialogDescription>Increase your productive creating new tasks</DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(onSubimit)} className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="task-title">Title</Label>
                         <Input
