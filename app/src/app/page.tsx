@@ -1,5 +1,7 @@
 "use client"
 import { TaskApi } from "@/api/task";
+import { Error } from "@/components/Error";
+import { Loading } from "@/components/Loading";
 import { ProgressCard } from "@/components/ProgressCard";
 import { AddTaskModal } from "@/components/tasks/modal/AddTask";
 import { TaskDetailModal } from "@/components/tasks/modal/TaskDetail";
@@ -8,6 +10,7 @@ import { TasksCard } from "@/components/TasksCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTasks } from "@/hooks/useTasks";
 import { Task } from "@/types/task";
 import { Plus, Search } from "lucide-react"
@@ -20,12 +23,11 @@ export default function Home() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   if (error) {
-    toast.error("Failed to load tasks");
-    return <p>Something went wrong...</p>;
+    return <Error/>
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loading/>
   }
 
   const handleTaskClick = (task: Task) => {

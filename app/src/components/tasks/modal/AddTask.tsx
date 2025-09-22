@@ -72,9 +72,9 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                                     type="date"
                                     className="bg-input border-border text-foreground"
                                     {...field}
-                                    value={field.value ? field.value.toISOString().split('T')[0] : ''}
+                                       value={field.value ? field.value.toISOString().split('T')[0] : ''}
                                     onChange={(e) => {
-                                        field.onChange(e.target.value ? new Date(e.target.value) : undefined)
+                                        field.onChange(e.target.value === '' ? undefined : new Date(e.target.value))
                                     }}
                                 />
                             )}
