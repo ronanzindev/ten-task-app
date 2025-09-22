@@ -68,13 +68,13 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                             defaultValue={undefined}
                             render={({ field }) => (
                                 <Input
-                                    defaultValue=""
                                     id="taskDueDate"
                                     type="date"
                                     className="bg-input border-border text-foreground"
                                     {...field}
+                                    value={field.value ? field.value.toISOString().split('T')[0] : ''}
                                     onChange={(e) => {
-                                        field.onChange(e.target.value === '' ? undefined : e.target.value)
+                                        field.onChange(e.target.value ? new Date(e.target.value) : undefined)
                                     }}
                                 />
                             )}
