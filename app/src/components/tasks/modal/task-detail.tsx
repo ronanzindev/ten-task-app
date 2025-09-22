@@ -14,14 +14,13 @@ interface TaskDetailModalProps {
 export function TaskDetailModal({ task, isOpen, onClose }: TaskDetailModalProps) {
     if (!task) return null
     const createdAt = new Date(task.createdAt)
-    const dueDate = task.dueDate && new Date(task.dueDate)
-    const isOverdue = task.dueDate && !task.isCompleted && new Date() > task.dueDate
+    const dueDate = task.dueDate ? new Date(task.dueDate) : null
+    const isOverdue = dueDate && !task.isCompleted && new Date() > dueDate
     const isDueSoon =
-        task.dueDate &&
+        dueDate &&
         !task.isCompleted &&
-        new Date() <= task.dueDate &&
-        task.dueDate.getTime() - new Date().getTime() <= 24 * 60 * 60 * 1000 // Due within 24 hours
-
+        new Date() <= dueDate &&
+        dueDate.getTime() - new Date().getTime() <= 24 * 60 * 60 * 1000
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">

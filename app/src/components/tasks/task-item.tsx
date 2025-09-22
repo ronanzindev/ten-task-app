@@ -16,12 +16,13 @@ interface TaskItemProps {
 
 export function TaskItem({ task, onToggle, onDelete, onTaskClick }: TaskItemProps) {
   const createdAt = new Date(task.createdAt)
-  const isOverdue = task.dueDate && !task.isCompleted && new Date() > task.dueDate
+  const dueDate = task.dueDate ? new Date(task.dueDate) : null
+  const isOverdue = dueDate && !task.isCompleted && new Date() > dueDate
   const isDueSoon =
-    task.dueDate &&
+    dueDate &&
     !task.isCompleted &&
-    new Date() <= task.dueDate &&
-    task.dueDate.getTime() - new Date().getTime() <= 24 * 60 * 60 * 1000 // Due within 24 hours
+    new Date() <= dueDate &&
+    dueDate.getTime() - new Date().getTime() <= 24 * 60 * 60 * 1000
 
   return (
     <div
@@ -36,7 +37,6 @@ export function TaskItem({ task, onToggle, onDelete, onTaskClick }: TaskItemProp
         <Checkbox
           checked={task.isCompleted}
           onCheckedChange={(e) => {
-            // e.stopPropagation()
             onToggle(task.id)
           }}
           onClick={(e) => e.stopPropagation()}
@@ -90,10 +90,10 @@ export function TaskItem({ task, onToggle, onDelete, onTaskClick }: TaskItemProp
               })}
             </span>
           </div>
-          {task.dueDate && (
+          {dueDate && (
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
-              <span>Due: {task.dueDate.toLocaleDateString()}</span>
+              <span>Due: {dueDate.toLocaleDateString()}</span>
             </div>
           )}
         </div>
