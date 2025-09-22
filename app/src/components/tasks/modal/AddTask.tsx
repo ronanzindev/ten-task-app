@@ -65,7 +65,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                         <Controller
                             control={control}
                             name="dueDate"
-                            defaultValue={""}
+                            defaultValue={undefined}
                             render={({ field }) => (
                                 <Input
                                     defaultValue=""

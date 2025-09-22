@@ -1,6 +1,6 @@
 "use client"
 
-import { TaskItem } from "@/components/tasks/task-item"
+import { TaskItem } from "@/components/tasks/TaskItem"
 import { Task } from "@/types/task"
 
 interface TaskListProps {
