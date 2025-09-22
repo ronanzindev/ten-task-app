@@ -44,7 +44,7 @@ describe("AddTaskModal", () => {
       expect(TaskApi.create).toHaveBeenCalledWith({
         title: "New Task",
         description: "Test description",
-        dueDate: "2025-09-22",
+        dueDate: new Date("2025-09-22"),
       })
       expect(mutate).toHaveBeenCalledWith("/tasks")
       expect(toast.success).toHaveBeenCalledWith("Task created successfully")
