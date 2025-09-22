@@ -1,12 +1,11 @@
 "use client"
 import { TaskApi } from "@/api/task"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog"
+import { Dialog, DialogTitle, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { CreateTask } from "@/types/task"
-import { DialogTitle } from "@radix-ui/react-dialog"
 import { Plus } from "lucide-react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -17,12 +16,13 @@ interface AddTaskModalProps {
     onClose: () => void
 }
 export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
-    const { handleSubmit, register, watch, control, formState: { errors } } = useForm<CreateTask>({ defaultValues: { title: "", dueDate: undefined } })
+    const { handleSubmit, register, watch, reset, control, formState: { errors } } = useForm<CreateTask>({ defaultValues: { title: "", dueDate: undefined } })
     const onSubmit = async (task: CreateTask) => {
         try {
             await TaskApi.create(task)
             mutate("/tasks")
             toast.success("Task created successfully")
+            reset()
             onClose()
         } catch (err) {
             toast.error("Failed to create task. Try it later")
@@ -44,7 +44,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                             type="text"
                             placeholder="Enter task title"
                             className="bg-input border-border text-foreground placeholder:text-muted-foreground"
-                            {...register('title', { required: true })}
+                            {...register('title', { required: "Title is required" })}
                         />
                         {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
                     </div>
@@ -82,7 +82,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                     </div>
 
                     <div className="flex gap-3 pt-4">
-                        <Button onClick={() => onClose()} type="button" variant={"outline"} className="flex-1 bg-red-400">Cancel</Button>
+                        <Button onClick={onClose} type="button" variant={"destructive"} className="flex-1 bg-red-400">Cancel</Button>
                         <Button
                             type="submit"
                             className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
