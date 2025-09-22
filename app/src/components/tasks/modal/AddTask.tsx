@@ -26,7 +26,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
             onClose()
         } catch (err) {
             toast.error("Failed to create task. Try it later")
-            console.error(err)
+            console.log(err)
         }
     }
     return (
@@ -65,7 +65,7 @@ export function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                         <Controller
                             control={control}
                             name="dueDate"
-                            defaultValue={undefined}
+                            defaultValue={""}
                             render={({ field }) => (
                                 <Input
                                     defaultValue=""

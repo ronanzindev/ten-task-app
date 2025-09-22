@@ -1,8 +1,8 @@
 "use client"
 import { TaskApi } from "@/api/task";
 import { ProgressCard } from "@/components/ProgressCard";
-import { AddTaskModal } from "@/components/tasks/modal/add-task";
-import { TaskDetailModal } from "@/components/tasks/modal/task-detail";
+import { AddTaskModal } from "@/components/tasks/modal/AddTask";
+import { TaskDetailModal } from "@/components/tasks/modal/TaskDetail";
 import { TaskList } from "@/components/tasks/task-list";
 import { TasksCard } from "@/components/TasksCard";
 import { Button } from "@/components/ui/button";
